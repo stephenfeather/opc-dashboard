@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      OPC_DASHBOARD_TOKEN: ${OPC_DASHBOARD_TOKEN}
+      OPC_SCHEMA_VERSION: ${OPC_SCHEMA_VERSION:-1}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173}
+      HOST: 0.0.0.0
+      PORT: "8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
