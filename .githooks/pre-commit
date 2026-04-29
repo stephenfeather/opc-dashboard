@@ -10,7 +10,12 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 cd "$REPO_ROOT"
 
 # Collect staged files (Added/Copied/Modified/Renamed). Skip deletions.
-mapfile -t STAGED < <(git diff --cached --name-only --diff-filter=ACMR)
+# NUL-delimited read for portability — macOS ships Bash 3.2 (no `mapfile`),
+# and filenames may contain spaces or newlines.
+STAGED=()
+while IFS= read -r -d '' f; do
+    STAGED+=("$f")
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
 
 if [[ ${#STAGED[@]} -eq 0 ]]; then
     exit 0
@@ -20,8 +25,8 @@ PY_FILES=()
 TS_FILES=()
 for f in "${STAGED[@]}"; do
     case "$f" in
-        backend/*.py|backend/**/*.py) PY_FILES+=("$f") ;;
-        frontend/*.ts|frontend/*.tsx|frontend/**/*.ts|frontend/**/*.tsx) TS_FILES+=("$f") ;;
+        backend/*.py) PY_FILES+=("$f") ;;
+        frontend/*.ts|frontend/*.tsx) TS_FILES+=("$f") ;;
     esac
 done
 
