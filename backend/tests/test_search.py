@@ -1,3 +1,6 @@
+import pytest
+
+
 def test_search_requires_auth(client):
     response = client.post("/api/search", json={"query": "test"})
     assert response.status_code == 401
@@ -28,8 +31,9 @@ def test_search_filters_by_memory_types(client, auth):
     )
     assert response.status_code == 200
     body = response.json()
-    for h in body["hits"]:
-        assert h["type"] == "WORKING_SOLUTION"
+    if not body["hits"]:
+        pytest.skip("No search results found, cannot test memory_type filter.")
+    assert all(h["type"] == "WORKING_SOLUTION" for h in body["hits"])
 
 
 def test_search_validates_empty_query(client, auth):

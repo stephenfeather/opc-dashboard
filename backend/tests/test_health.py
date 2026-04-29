@@ -22,25 +22,19 @@ def test_auth_rejects_bad_token(client):
     assert response.status_code == 401
 
 
-def test_stats_with_token(client, auth):
+def test_stats_memory_endpoint(client, auth):
     response = client.get("/api/stats/memory", headers=auth)
     assert response.status_code == 200
     body = response.json()
+
     assert "memories_total" in body
     assert "kg" in body
 
-
-def test_stats_memory_by_type_shape(client, auth):
-    response = client.get("/api/stats/memory", headers=auth)
-    body = response.json()
     assert isinstance(body["memories_by_type"], list)
     if body["memories_by_type"]:
         row = body["memories_by_type"][0]
         assert "learning_type" in row
         assert "n" in row
 
-
-def test_stats_kg_counts_present(client, auth):
-    response = client.get("/api/stats/memory", headers=auth)
-    kg = response.json()["kg"]
+    kg = body["kg"]
     assert {"entities", "edges", "mentions"} <= kg.keys()
