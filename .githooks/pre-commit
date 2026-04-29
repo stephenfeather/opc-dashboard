@@ -33,7 +33,7 @@ if [[ ${#PY_FILES[@]} -gt 0 ]]; then
         fail=1
     fi
     echo "==> ruff format --check on staged Python file(s)"
-    if ! (cd backend && uv run ruff format --check "${PY_FILES[@]/#backend\//}"); then
+    if ! (cd backend && uv run ruff format --check -- "${PY_FILES[@]/#backend\//}"); then
         fail=1
     fi
 fi
