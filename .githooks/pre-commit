@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Pre-commit hook: run ruff on staged Python changes, tsc on staged TS changes.
+#
+# Enable for this clone:
+#   git config core.hooksPath .githooks
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+# Collect staged files (Added/Copied/Modified/Renamed). Skip deletions.
+# NUL-delimited read for portability — macOS ships Bash 3.2 (no `mapfile`),
+# and filenames may contain spaces or newlines.
+STAGED=()
+while IFS= read -r -d '' f; do
+    STAGED+=("$f")
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
+
+if [[ ${#STAGED[@]} -eq 0 ]]; then
+    exit 0
+fi
+
+PY_FILES=()
+TS_FILES=()
+for f in "${STAGED[@]}"; do
+    case "$f" in
+        backend/*.py) PY_FILES+=("$f") ;;
+        frontend/*.ts|frontend/*.tsx) TS_FILES+=("$f") ;;
+    esac
+done
+
+fail=0
+
+if [[ ${#PY_FILES[@]} -gt 0 ]]; then
+    echo "==> ruff check on ${#PY_FILES[@]} staged Python file(s)"
+    if ! (cd backend && uv run ruff check -- "${PY_FILES[@]/#backend\//}"); then
+        fail=1
+    fi
+    echo "==> ruff format --check on staged Python file(s)"
+    if ! (cd backend && uv run ruff format --check -- "${PY_FILES[@]/#backend\//}"); then
+        fail=1
+    fi
+fi
+
+if [[ ${#TS_FILES[@]} -gt 0 ]]; then
+    echo "==> tsc --noEmit (project-wide) for ${#TS_FILES[@]} staged TS file(s)"
+    if [[ ! -d frontend ]]; then
+        echo "warning: TS files staged but frontend/ not present; skipping tsc"
+    elif [[ ! -f frontend/package.json ]]; then
+        echo "warning: frontend/ has no package.json yet; skipping tsc"
+    else
+        if ! (cd frontend && npx --no-install tsc --noEmit); then
+            fail=1
+        fi
+    fi
+fi
+
+if [[ $fail -ne 0 ]]; then
+    echo
+    echo "Pre-commit checks failed. Fix the issues above or bypass with --no-verify (discouraged)."
+    exit 1
+fi
+
+exit 0
