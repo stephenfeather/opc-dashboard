@@ -12,7 +12,7 @@ async def require_token(authorization: str | None = Header(default=None)) -> Non
             headers={"WWW-Authenticate": "Bearer"},
         )
     token = authorization.removeprefix("Bearer ").strip()
-    if token != settings.opc_dashboard_token:
+    if not secrets.compare_digest(token, settings.opc_dashboard_token):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token",
