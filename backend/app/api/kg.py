@@ -58,7 +58,7 @@ async def graph(
 
 
 @router.get("/entities/{entity_id}")
-async def entity_detail(entity_id: str) -> dict[str, object]:
+async def entity_detail(entity_id: UUID) -> dict[str, object]:
     pool = await get_pool()
     async with pool.acquire() as conn:
         entity = await conn.fetchrow(
