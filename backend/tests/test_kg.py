@@ -32,8 +32,12 @@ def test_kg_graph_filters_by_entity_type(client, auth):
 def test_kg_entity_detail_not_found(client, auth):
     fake_uuid = "00000000-0000-0000-0000-000000000000"
     response = client.get(f"/api/kg/entities/{fake_uuid}", headers=auth)
-    assert response.status_code == 200
-    assert response.json() == {"error": "not found"}
+    assert response.status_code == 404
+
+
+def test_kg_entity_detail_invalid_uuid(client, auth):
+    response = client.get("/api/kg/entities/not-a-uuid", headers=auth)
+    assert response.status_code == 422
 
 
 def test_kg_entity_detail_existing(client, auth):
