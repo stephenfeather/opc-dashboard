@@ -12,6 +12,9 @@ CLAUDE.md
 # Ignore the directory where Claude's thoughts are stored
 thoughts/
 
+# Git worktrees
+.worktrees/
+
 # Env / secrets
 .env
 .env.local
