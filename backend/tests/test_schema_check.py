@@ -1,8 +1,3 @@
-import os
-
-os.environ.setdefault("DATABASE_URL", "postgresql://claude:claude_dev@localhost:5432/continuous_claude")
-os.environ.setdefault("OPC_DASHBOARD_TOKEN", "test-token")
-
 import pytest
 
 from app.db import close_pool, get_pool
