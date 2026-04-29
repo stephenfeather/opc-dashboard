@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, Query
+from uuid import UUID
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from app.auth import require_token
 from app.db import get_pool
