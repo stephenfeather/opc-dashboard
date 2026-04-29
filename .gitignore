@@ -1,0 +1,37 @@
+
+.codegraph/
+.claude/
+.tldr/
+.tldrignore
+sgconfig.yml
+.ast-grep/
+
+# Ignore the generated markdown file for Claude
+CLAUDE.md
+
+# Ignore the directory where Claude's thoughts are stored
+thoughts/
+
+# Git worktrees
+.worktrees/
+
+# Env / secrets
+.env
+.env.local
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+uv.lock
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.log
