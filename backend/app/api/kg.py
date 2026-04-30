@@ -69,8 +69,7 @@ async def entity_detail(entity_id: UUID) -> dict[str, object]:
         if entity is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Entity not found")
         memories = await conn.fetch(
-            "SELECT m.memory_id FROM kg_entity_mentions m "
-            "WHERE m.entity_id = $1 LIMIT 100",
+            "SELECT m.memory_id FROM kg_entity_mentions m WHERE m.entity_id = $1 LIMIT 100",
             entity_id,
         )
     return {
