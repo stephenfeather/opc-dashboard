@@ -19,8 +19,7 @@ SCHEMA_VERSION_KEY = "schema_version"
 async def verify_schema(pool: asyncpg.Pool, expected_version: str) -> dict[str, object]:
     async with pool.acquire() as conn:
         rows = await conn.fetch(
-            "SELECT table_name FROM information_schema.tables "
-            "WHERE table_schema = 'public'"
+            "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"
         )
         present = {r["table_name"] for r in rows}
 
