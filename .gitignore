@@ -18,6 +18,7 @@ thoughts/
 # Env / secrets
 .env
 .env.local
+.envrc
 
 # Python
 __pycache__/
