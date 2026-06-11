@@ -24,19 +24,19 @@ export function Header<TView extends string>({
             Watch readiness drift, inspect entity topology, and pull archival memory slices
             without bouncing between curl commands.
           </p>
-          <div className="nav-cluster" role="tablist" aria-label="Dashboard views">
+          <nav className="nav-cluster" aria-label="Dashboard views">
             {Object.entries(viewLabels).map(([key, label]) => (
               <button
                 key={key}
                 type="button"
                 className={`nav-button ${key === activeView ? "active" : ""}`}
-                aria-pressed={key === activeView}
+                aria-current={key === activeView ? "page" : undefined}
                 onClick={() => onViewChange(key as TView)}
               >
                 {label}
               </button>
             ))}
-          </div>
+          </nav>
         </div>
         <div className="token-panel">
           <HealthIndicator />
