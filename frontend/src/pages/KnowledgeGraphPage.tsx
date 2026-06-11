@@ -62,7 +62,7 @@ export function KnowledgeGraphPage({ client = runtimeClient }: KnowledgeGraphPag
     return () => {
       cancelled = true;
     };
-  }, [client, request, selectedNodeId]);
+  }, [client, request]);
 
   useEffect(() => {
     if (selectedNodeId === null) {
