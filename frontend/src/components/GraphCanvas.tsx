@@ -45,7 +45,7 @@ const GRAPH_STYLESHEET = [
     },
   },
   {
-    selector: "edge[label]",
+    selector: "edge[relation]",
     style: {
       label: "data(relation)",
       "font-size": 9,
@@ -54,7 +54,7 @@ const GRAPH_STYLESHEET = [
       "text-background-opacity": 0.8,
       "text-background-padding": 2,
     },
-  },
+  }
 ] as const;
 
 function toElements(graph: KnowledgeGraphResponse, selectedNodeId: string | null): ElementDefinition[] {
