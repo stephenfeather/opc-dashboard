@@ -69,7 +69,9 @@ async function parseErrorMessage(response: Response): Promise<string> {
     }
 
     if (Array.isArray(payload.detail)) {
-      return payload.detail.join(", ");
+      return payload.detail
+        .map((entry) => (typeof entry === "string" ? entry : JSON.stringify(entry)))
+        .join(", ");
     }
   } else {
     const text = (await response.text()).trim();
